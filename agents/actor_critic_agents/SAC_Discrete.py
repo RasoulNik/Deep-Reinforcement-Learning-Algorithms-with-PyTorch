@@ -6,7 +6,10 @@ from agents.Base_Agent import Base_Agent
 from utilities.data_structures.Replay_Buffer import Replay_Buffer
 from agents.actor_critic_agents.SAC import SAC
 from utilities.Utility_Functions import create_actor_distribution
-
+LOG_SIG_MAX = 2
+LOG_SIG_MIN = -20
+TRAINING_EPISODES_PER_EVAL_EPISODE = 1
+EPSILON = 1e-6
 class SAC_Discrete(SAC):
     """The Soft Actor Critic for discrete actions. It inherits from SAC for continuous actions and only changes a few
     methods."""
@@ -48,9 +51,14 @@ class SAC_Discrete(SAC):
         self.add_extra_noise = False
         self.do_evaluation_iterations = self.hyperparameters["do_evaluation_iterations"]
 
+
+
+
     def produce_action_and_action_info(self, state):
         """Given the state, produces an action, the probability of the action, the log probability of the action, and
         the argmax action"""
+        # print("11111")
+
         action_probabilities = self.actor_local(state)
         max_probability_action = torch.argmax(action_probabilities, dim=-1)
         action_distribution = create_actor_distribution(self.action_types, action_probabilities, self.action_size)

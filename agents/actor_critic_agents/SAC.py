@@ -9,7 +9,7 @@ import numpy as np
 
 LOG_SIG_MAX = 2
 LOG_SIG_MIN = -20
-TRAINING_EPISODES_PER_EVAL_EPISODE = 10
+TRAINING_EPISODES_PER_EVAL_EPISODE = 1
 EPSILON = 1e-6
 
 class SAC(Base_Agent):
@@ -117,7 +117,7 @@ class SAC(Base_Agent):
         if eval == False: action, _, _ = self.produce_action_and_action_info(state)
         else:
             with torch.no_grad():
-                _, z, action = self.produce_action_and_action_info(state)
+                action, z, _ = self.produce_action_and_action_info(state)
         action = action.detach().cpu().numpy()
         return action[0]
 
